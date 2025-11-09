@@ -103,7 +103,7 @@ const Hero: React.FC = () => {
                 Get In Touch
               </button> */}
               <a
-                href="/rithick-resume.pdf"
+                href={`${import.meta.env.BASE_URL}rithick-resume.pdf`}
                 download
                 className="px-8 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg font-medium hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all duration-200 flex items-center gap-2"
               >
