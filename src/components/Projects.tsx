@@ -1,264 +1,378 @@
 import React, { useState } from 'react';
-import { ExternalLink, Github, Calendar, Code, Smartphone, Globe } from 'lucide-react';
+import { ExternalLink, Github, Search, Layers, Sparkles, X, CheckCircle2, Code2, ArrowRight } from 'lucide-react';
+import { PROJECTS_DATA, ProjectItem } from '../utils/portfolioData';
 
 const Projects: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'work' | 'personal'>('all');
+  const [selectedTech, setSelectedTech] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [activeModalProject, setActiveModalProject] = useState<ProjectItem | null>(null);
 
-  const projects = [
-    {
-      id: 1,
-      title: "InfoNet Comm - CRM & Customer Payment",
-      category: "work",
-      type: "Web + Mobile",
-      duration: "Apr 2024 - Jul 2024",
-      description: "A comprehensive CRM system with web portal for tower lead management and mobile app for customer payments. Built with React.js for web interface and Flutter for mobile application.",
-      technologies: ["React.js", "Flutter", "FastAPI", "PostgreSQL"],
-      features: [
-        "Tower lead management system",
-        "Customer payment processing",
-        "Real-time data synchronization",
-        "Mobile-first design for payments"
-      ],
-      icon: <Smartphone size={24} />
-    },
-    {
-      id: 2,
-      title: "Greenmark - E-Commerce Platform",
-      category: "work",
-      type: "Web Application",
-      duration: "Aug 2024 - Nov 2024",
-      description: "Admin panel for managing organic product listings and inventory. Features comprehensive product management, order tracking, and inventory control systems.",
-      technologies: ["React.js", "FastAPI", "PostgreSQL", "Material-UI"],
-      features: [
-        "Product catalog management",
-        "Inventory tracking system",
-        "Order management dashboard",
-        "Analytics and reporting"
-      ],
-      icon: <Globe size={24} />
-    },
-    {
-      id: 3,
-      title: "Project Pro - Project Management",
-      category: "work",
-      type: "Web Application",
-      duration: "Dec 2024 - Feb 2025",
-      description: "Task management system with multiple user roles and progress tracking. Includes project planning, team collaboration, and performance monitoring features.",
-      technologies: ["React.js", "FastAPI", "PostgreSQL", "Chart.js"],
-      features: [
-        "Multi-role user management",
-        "Task assignment and tracking",
-        "Progress visualization",
-        "Team collaboration tools"
-      ],
-      icon: <Code size={24} />
-    },
-    {
-      id: 4,
-      title: "FaceViz - Attendance Management",
-      category: "work",
-      type: "Web Application",
-      duration: "Mar 2025 - May 2025",
-      description: "Modern attendance management system with expense tracking and live tracking capabilities. Built with Django framework for robust backend functionality.",
-      technologies: ["Django", "Python", "SQLite", "Bootstrap"],
-      features: [
-        "Facial recognition attendance",
-        "Expense tracking module",
-        "Live location tracking",
-        "Comprehensive reporting"
-      ],
-      icon: <Globe size={24} />
-    },
-    {
-      id: 5,
-      title: "CoSkillz - Learning Platform",
-      category: "work",
-      type: "Web Application",
-      duration: "Jun 2025 - Current",
-      description: "Collaborative learning platform with multiple personas and research capabilities. Features interactive learning modules, peer collaboration, and research tools.",
-      technologies: ["React.js", "TypeScript", "FastAPI", "PostgreSQL"],
-      features: [
-        "Multi-persona learning paths",
-        "Collaborative research tools",
-        "Interactive learning modules",
-        "Progress tracking and analytics"
-      ],
-      icon: <Code size={24} />
-    },
-    {
-      id: 6,
-      title: "Notes Taking Web App",
-      category: "personal",
-      type: "Web Application",
-      duration: "Jan 2024 - Mar 2024",
-      description: "Modern note-taking application with user authentication and CRUD operations. Features rich text editing, categorization, and search functionality.",
-      technologies: ["Next.js", "TypeScript", "React.js", "FastAPI", "MongoDB"],
-      features: [
-        "Rich text editor",
-        "User authentication",
-        "Note categorization",
-        "Search and filter functionality"
-      ],
-      icon: <Code size={24} />,
-      github: "https://github.com/Rithick2024",
-      demo: "#"
-    }
-  ];
+  // Extract all unique tech tags for filter chips
+  const allTechTags = Array.from(
+    new Set(PROJECTS_DATA.flatMap((p) => p.technologies))
+  ).slice(0, 8); // Top tags
 
-  const filters = [
-    { id: 'all', label: 'All Projects', count: projects.length },
-    { id: 'work', label: 'Work Projects', count: projects.filter(p => p.category === 'work').length },
-    { id: 'personal', label: 'Personal Projects', count: projects.filter(p => p.category === 'personal').length }
-  ];
+  // Filter projects
+  const filteredProjects = PROJECTS_DATA.filter((project) => {
+    const matchesCategory = activeFilter === 'all' || project.category === activeFilter;
+    const matchesTech = !selectedTech || project.technologies.some((t) => t.toLowerCase() === selectedTech.toLowerCase());
+    const matchesSearch =
+      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.technologies.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-  const filteredProjects = activeFilter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === activeFilter);
+    return matchesCategory && matchesTech && matchesSearch;
+  });
 
   return (
-    <section id="projects" className="py-20">
+    <section id="projects" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Projects</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            A showcase of my work and contributions to various projects
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
+            <span>PORTFOLIO & APPLICATIONS</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            Featured <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Projects</span>
+          </h2>
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
+            Production web applications, role-based portals, and full-stack solutions built with modern web technologies.
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex justify-center mb-12">
-          <div className="flex flex-wrap gap-4">
-            {filters.map((filter) => (
-              <button
-                key={filter.id}
-                onClick={() => setActiveFilter(filter.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-200 ${
-                  activeFilter === filter.id
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
-                {filter.label}
-                <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded-full">
-                  {filter.count}
-                </span>
-              </button>
-            ))}
+        {/* Filter Toolbar & Search */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          
+          {/* Category Tabs */}
+          <div className="flex flex-wrap gap-2 p-1.5 bg-gray-100 dark:bg-gray-800/80 rounded-2xl border border-gray-200 dark:border-gray-700/60 shadow-sm">
+            <button
+              onClick={() => { setActiveFilter('all'); setSelectedTech(null); }}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeFilter === 'all' && !selectedTech
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              All Projects ({PROJECTS_DATA.length})
+            </button>
+            <button
+              onClick={() => { setActiveFilter('work'); setSelectedTech(null); }}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeFilter === 'work' && !selectedTech
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Production Work ({PROJECTS_DATA.filter((p) => p.category === 'work').length})
+            </button>
+            <button
+              onClick={() => { setActiveFilter('personal'); setSelectedTech(null); }}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeFilter === 'personal' && !selectedTech
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Personal ({PROJECTS_DATA.filter((p) => p.category === 'personal').length})
+            </button>
           </div>
+
+          {/* Search Box */}
+          <div className="relative w-full md:w-72">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by title, tech (e.g. FastAPI)..."
+              className="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white shadow-sm"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+        </div>
+
+        {/* Quick Tech Tag Filters */}
+        <div className="flex flex-wrap items-center gap-2 mb-10 pb-2">
+          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 mr-1 flex items-center gap-1">
+            <Code2 size={13} /> Filter by Tech:
+          </span>
+          {allTechTags.map((tech) => (
+            <button
+              key={tech}
+              onClick={() => setSelectedTech(selectedTech === tech ? null : tech)}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition-all ${
+                selectedTech === tech
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              {tech}
+            </button>
+          ))}
+          {selectedTech && (
+            <button
+              onClick={() => setSelectedTech(null)}
+              className="text-xs text-blue-600 dark:text-blue-400 font-semibold hover:underline ml-2"
+            >
+              Reset Tag
+            </button>
+          )}
         </div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-            >
-              {/* Project Header */}
-              <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-800">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                    {project.icon}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mb-16">
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map((project) => (
+              <div
+                key={project.id}
+                className="bg-white dark:bg-gray-800/90 rounded-2xl border border-gray-100 dark:border-gray-700/70 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+              >
+                <div>
+                  {/* Card Header Top Banner */}
+                  <div className="p-6 bg-gradient-to-br from-blue-50/80 to-indigo-50/40 dark:from-gray-800 dark:to-gray-800/40 border-b border-gray-100 dark:border-gray-700/60">
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+                        {project.type}
+                      </span>
+                      {project.metrics && (
+                        <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                          <Sparkles size={11} /> {project.metrics}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-xl font-extrabold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5">
+                      {project.subtitle}
+                    </p>
                   </div>
-                  <div className="flex gap-2">
+
+                  {/* Card Body */}
+                  <div className="p-6 space-y-4">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Features Preview (first 2 highlights) */}
+                    <div className="space-y-1.5">
+                      {project.highlights.slice(0, 2).map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
+                          <CheckCircle2 size={13} className="text-blue-500 shrink-0 mt-0.5" />
+                          <span className="line-clamp-1">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech Badges */}
+                    <div className="flex flex-wrap gap-1.5 pt-2">
+                      {project.technologies.map((t, i) => (
+                        <span
+                          key={i}
+                          className="text-[11px] px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded font-medium"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Footer Action */}
+                <div className="p-6 pt-0 flex items-center justify-between border-t border-gray-100 dark:border-gray-700/60 mt-4">
+                  <button
+                    onClick={() => setActiveModalProject(project)}
+                    className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1.5 group/btn"
+                  >
+                    <span>View Architecture Details</span>
+                    <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
+
+                  <div className="flex items-center gap-2">
                     {project.github && (
                       <a
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-white dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors duration-200"
+                        className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        title="GitHub Repository"
                       >
                         <Github size={16} />
                       </a>
                     )}
-                    {project.demo && (
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-white dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors duration-200"
-                      >
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full">
-                    {project.type}
-                  </span>
-                  <div className="flex items-center">
-                    <Calendar size={14} className="mr-1" />
-                    <span>{project.duration}</span>
-                  </div>
-                </div>
+
               </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
-                  {project.description}
-                </p>
-
-                {/* Features */}
-                <div className="mb-4">
-                  <h4 className="font-semibold mb-2 text-sm">Key Features:</h4>
-                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                    {project.features.slice(0, 2).map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-blue-600 mr-2">•</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Technologies */}
-                <div>
-                  <h4 className="font-semibold mb-2 text-sm">Technologies:</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {project.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            ))
+          ) : (
+            <div className="col-span-3 text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                No projects matched your filter criteria.
+              </p>
+              <button
+                onClick={() => { setActiveFilter('all'); setSelectedTech(null); setSearchQuery(''); }}
+                className="text-xs text-blue-600 font-bold hover:underline"
+              >
+                Clear all filters
+              </button>
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Project Stats */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        {/* Dynamic Summary Stats Strip */}
+        <div className="bg-white dark:bg-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 dark:border-gray-700/60 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">{projects.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">
-                {projects.filter(p => p.category === 'work').length}
+              <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">
+                {PROJECTS_DATA.length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Work Projects</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">
-                {projects.filter(p => p.category === 'personal').length}
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">
+                Total Production & Projects
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Personal Projects</div>
             </div>
+
             <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">10+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Technologies Used</div>
+              <div className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                {PROJECTS_DATA.filter((p) => p.category === 'work').length}
+              </div>
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">
+                Client & Enterprise Portals
+              </div>
+            </div>
+
+            <div>
+              <div className="text-3xl font-extrabold text-purple-600 dark:text-purple-400">
+                {PROJECTS_DATA.filter((p) => p.category === 'personal').length}
+              </div>
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">
+                Personal Cloud Apps
+              </div>
+            </div>
+
+            <div>
+              <div className="text-3xl font-extrabold text-amber-600 dark:text-amber-400">
+                100%
+              </div>
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">
+                Full-Stack Delivery Rate
+              </div>
             </div>
           </div>
         </div>
+
       </div>
+
+      {/* Interactive Project Details Modal */}
+      {activeModalProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeInUp">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-gray-200 dark:border-gray-700 relative max-h-[90vh] overflow-y-auto">
+            
+            {/* Close Button */}
+            <button
+              onClick={() => setActiveModalProject(null)}
+              className="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-white bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Modal Content */}
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+                    {activeModalProject.type}
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    {activeModalProject.duration}
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
+                  {activeModalProject.title}
+                </h3>
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mt-1">
+                  {activeModalProject.subtitle}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Overview & Impact
+                </h4>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {activeModalProject.description}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Key Technical Features & Architecture:
+                </h4>
+                <div className="space-y-2">
+                  {activeModalProject.highlights.map((h, i) => (
+                    <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                      <CheckCircle2 size={16} className="text-blue-500 shrink-0 mt-0.5" />
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                  Technologies Utilized:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {activeModalProject.technologies.map((t, i) => (
+                    <span
+                      key={i}
+                      className="px-3 py-1 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 rounded-lg text-xs font-semibold"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+                <button
+                  onClick={() => setActiveModalProject(null)}
+                  className="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl text-xs font-bold transition-colors"
+                >
+                  Close
+                </button>
+
+                {activeModalProject.github && (
+                  <a
+                    href={activeModalProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2"
+                  >
+                    <Github size={15} />
+                    <span>View Repository</span>
+                  </a>
+                )}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </section>
   );
 };

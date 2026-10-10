@@ -255,11 +255,11 @@
     grid-template-columns: 1fr;
     gap: 3rem;
   }
-  
+
   .highlights-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .about-stats {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -269,49 +269,49 @@
   .section-title {
     font-size: 2rem;
   }
-  
+
   .text-title {
     font-size: 1.5rem;
   }
-  
+
   .text-description {
     font-size: 1rem;
   }
-  
+
   .about-stats {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .highlights-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .highlight-card {
     padding: 1.5rem;
   }
-  
+
   .journey-timeline::before {
     left: 1rem;
   }
-  
+
   .timeline-item {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .timeline-item:nth-child(odd) {
     flex-direction: column;
   }
-  
+
   .timeline-item:nth-child(odd) .timeline-content,
   .timeline-item:nth-child(even) .timeline-content {
     text-align: left;
     padding-left: 3rem;
     padding-right: 1rem;
   }
-  
+
   .timeline-dot {
     left: 1rem;
   }
@@ -321,19 +321,19 @@
   .section-title {
     font-size: 1.75rem;
   }
-  
+
   .text-title {
     font-size: 1.25rem;
   }
-  
+
   .timeline-content {
     padding: 1.5rem;
   }
-  
+
   .highlight-card {
     padding: 1rem;
   }
-  
+
   .highlight-icon {
     width: 50px;
     height: 50px;

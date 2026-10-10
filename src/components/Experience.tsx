@@ -1,104 +1,54 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin } from 'lucide-react';
+import { Briefcase, GraduationCap, Award, Calendar, MapPin, CheckCircle2, Sparkles, Building2 } from 'lucide-react';
+import { EXPERIENCES_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, getDynamicExperienceStats } from '../utils/portfolioData';
 
 const Experience: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('experience');
-
-  const experiences = [
-    {
-      company: "Datamoo.AI",
-      position: "Web Development Intern",
-      duration: "Mar 2024 - May 2024",
-      location: "Chennai, India",
-      description: "Joined as a Web Development Intern, contributing to front-end development using React JS/TS, Next JS/TS, Django, and Flutter. Assisted in backend integrations through FastAPI and PostgreSQL, and learned project workflows and best practices.",
-      achievements: [
-        "Assisted in front-end development using React JS/TS, Next JS/TS, Django, and Flutter with backend integrations through FastAPI and PostgreSQL",
-        "Learned and adapted to project workflows, code reviews, and agile methodologies",
-        "Supported senior developers in implementing features and fixing bugs"
-      ],
-      technologies: ["React.js", "TypeScript", "Next.js", "Django", "FastAPI", "PostgreSQL", "Flutter"]
-    },
-    {
-      company: "Datamoo.AI",
-      position: "Web Developer",
-      duration: "Jun 2024 - Present",
-      location: "Chennai, India",
-      description: "Promoted to Web Developer. Responsible for leading front-end development, analyzing and implementing Change Requests, and collaborating with cross-functional teams for project delivery.",
-      achievements: [
-        "Led front-end development using React JS/TS, Next JS/TS, Django, and Flutter with backend integrations through FastAPI and PostgreSQL",
-        "Actively involved in analyzing and implementing Change Requests (both enhancement and defect-related), ensuring smooth project evolution",
-        "Collaborated closely with cross-functional teams and quickly adapted to end-to-end project workflows, demonstrating strong learning curve and cooperative spirit"
-      ],
-      technologies: ["React.js", "TypeScript", "Next.js", "Django", "FastAPI", "PostgreSQL", "Flutter"]
-    }
-  ];
-
-  const education = [
-    {
-      institution: "Bachelor of Engineering in Computer Science",
-      degree: "BE Computer Science",
-      duration: "Sep 2020 - May 2024",
-      location: "India",
-      description: "Gained foundational and advanced knowledge in programming, data structures, algorithms, databases, and computer networks.",
-      achievements: [
-        "Gained foundational and advanced knowledge in programming, data structures, algorithms, databases, and computer networks",
-        "Exposure to software engineering principles, system design, and emerging technologies like AI and cloud computing"
-      ]
-    },
-    {
-      institution: "St.Joseph Matric. Hr. Sec. School",
-      degree: "XII - Biology",
-      duration: "Jun 2018 - Apr 2020",
-      location: "India",
-      description: "Studied core subjects including Mathematics, Physics, and Biology.",
-      achievements: [
-        "Studied core subjects including Mathematics, Physics, and Biology",
-        "Built a strong foundation in logical reasoning, problem-solving, and basic programming concepts"
-      ]
-    }
-  ];
-
-  const certifications = [
-    {
-      name: "Web Development Certification",
-      issuer: "Ravvysoft Technologies",
-      duration: "Dec 2023 - Feb 2024",
-      skills: ["HTML/CSS", "JavaScript", "React JS"],
-      description: "Comprehensive certification covering modern web development technologies and best practices."
-    }
-  ];
+  const [activeTab, setActiveTab] = useState<'experience' | 'education' | 'certifications'>('experience');
+  const expStats = getDynamicExperienceStats();
 
   const tabs = [
-    { id: 'experience', label: 'Experience', count: experiences.length },
-    { id: 'education', label: 'Education', count: education.length },
-    { id: 'certifications', label: 'Certifications', count: certifications.length }
+    { id: 'experience', label: 'Work Experience', count: EXPERIENCES_DATA.length, icon: <Briefcase size={16} /> },
+    { id: 'education', label: 'Education', count: EDUCATION_DATA.length, icon: <GraduationCap size={16} /> },
+    { id: 'certifications', label: 'Certifications', count: CERTIFICATIONS_DATA.length, icon: <Award size={16} /> }
   ];
 
   return (
-    <section id="experience" className="py-20">
+    <section id="experience" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Experience & Education</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            My professional journey and educational background
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
+            <span>CAREER & CREDENTIALS</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            Experience & <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Education</span>
+          </h2>
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
+            Detailed timeline of production engineering roles, academic achievements, and certifications.
           </p>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tab Switcher */}
         <div className="flex justify-center mb-12">
-          <div className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+          <div className="bg-gray-100 dark:bg-gray-800/80 p-1.5 rounded-2xl flex flex-wrap gap-1 border border-gray-200 dark:border-gray-700/60 shadow-sm">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 rounded-md font-medium transition-all duration-200 ${
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                   activeTab === tab.id
-                    ? 'bg-white dark:bg-gray-700 text-blue-600 shadow-md'
+                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                {tab.label}
-                <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full">
+                {tab.icon}
+                <span>{tab.label}</span>
+                <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
+                  activeTab === tab.id
+                    ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                }`}>
                   {tab.count}
                 </span>
               </button>
@@ -106,126 +56,174 @@ const Experience: React.FC = () => {
           </div>
         </div>
 
-        {/* Tab Content */}
+        {/* Tab Content Container */}
         <div className="max-w-4xl mx-auto">
+          
+          {/* Work Experience Tab */}
           {activeTab === 'experience' && (
             <div className="space-y-8">
-              {experiences.map((exp, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+              {EXPERIENCES_DATA.map((exp, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-gray-800/90 rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 dark:border-gray-700/70 hover:shadow-xl transition-all relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-bl-full pointer-events-none"></div>
+
+                  {/* Header Row */}
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-700/60">
                     <div>
-                      <h3 className="text-2xl font-bold text-blue-600 mb-2">{exp.position}</h3>
-                      <h4 className="text-xl font-semibold mb-2">{exp.company}</h4>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center text-gray-600 dark:text-gray-400 mb-2">
-                        <Calendar size={16} className="mr-2" />
-                        <span>{exp.duration}</span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+                          <Building2 size={20} />
+                        </span>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {exp.position}
+                        </h3>
                       </div>
-                      <div className="flex items-center text-gray-600 dark:text-gray-400">
-                        <MapPin size={16} className="mr-2" />
+                      <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                        {exp.company}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col md:items-end gap-1.5 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-semibold text-xs">
+                        <Sparkles size={13} className="animate-spin" style={{ animationDuration: '6s' }} />
+                        <span>Mar 2024 – Present ({expStats.datamooDetailed})</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                        <MapPin size={14} className="text-gray-400" />
                         <span>{exp.location}</span>
                       </div>
                     </div>
                   </div>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">{exp.description}</p>
-                  
+
+                  {/* Description */}
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                    {exp.description}
+                  </p>
+
+                  {/* Key Responsibilities & Achievements */}
                   <div className="mb-6">
-                    <h5 className="font-semibold mb-3">Key Achievements:</h5>
-                    <ul className="space-y-2">
-                      {exp.achievements.map((achievement, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="text-blue-600 mr-2">▸</span>
-                          <span className="text-gray-600 dark:text-gray-400">{achievement}</span>
-                        </li>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-3">
+                      Key Responsibilities & Deliverables:
+                    </h4>
+                    <div className="space-y-2.5">
+                      {exp.achievements.map((item, aIdx) => (
+                        <div key={aIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                          <CheckCircle2 size={16} className="text-blue-500 shrink-0 mt-0.5" />
+                          <span>{item}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
-                  
+
+                  {/* Tech Stack Chips */}
                   <div>
-                    <h5 className="font-semibold mb-3">Technologies Used:</h5>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2.5">
+                      Primary Tech Stack:
+                    </h4>
                     <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, idx) => (
+                      {exp.technologies.map((tech, tIdx) => (
                         <span
-                          key={idx}
-                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium"
+                          key={tIdx}
+                          className="px-3 py-1 bg-gray-100 dark:bg-gray-700/60 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium border border-gray-200 dark:border-gray-600/50"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
                   </div>
+
                 </div>
               ))}
             </div>
           )}
 
+          {/* Education Tab */}
           {activeTab === 'education' && (
-            <div className="space-y-8">
-              {education.map((edu, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div className="space-y-6">
+              {EDUCATION_DATA.map((edu, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-gray-800/90 rounded-2xl p-6 sm:p-7 shadow-lg border border-gray-100 dark:border-gray-700/70 hover:shadow-xl transition-all"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-purple-600 mb-2">{edu.degree}</h3>
-                      <h4 className="text-xl font-semibold mb-2">{edu.institution}</h4>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center text-gray-600 dark:text-gray-400 mb-2">
-                        <Calendar size={16} className="mr-2" />
-                        <span>{edu.duration}</span>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {edu.degree}
+                      </h3>
+                      <div className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                        {edu.institution}
                       </div>
-                      <div className="flex items-center text-gray-600 dark:text-gray-400">
-                        <MapPin size={16} className="mr-2" />
-                        <span>{edu.location}</span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold text-xs">
+                        {edu.scoreLabel}: {edu.score}
+                      </span>
+                      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <Calendar size={13} className="mr-1" />
+                        <span>{edu.period}</span>
                       </div>
                     </div>
                   </div>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">{edu.description}</p>
-                  
-                  <div>
-                    <h5 className="font-semibold mb-3">Key Learnings:</h5>
-                    <ul className="space-y-2">
-                      {edu.achievements.map((achievement, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="text-purple-600 mr-2">▸</span>
-                          <span className="text-gray-600 dark:text-gray-400">{achievement}</span>
-                        </li>
+
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
+                    {edu.description}
+                  </p>
+
+                  {edu.highlights.length > 0 && (
+                    <div className="space-y-1.5 border-t border-gray-100 dark:border-gray-700/60 pt-3">
+                      {edu.highlights.map((h, hIdx) => (
+                        <div key={hIdx} className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
+                          <span className="text-purple-500 font-bold">•</span>
+                          <span>{h}</span>
+                        </div>
                       ))}
-                    </ul>
-                  </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
 
+          {/* Certifications Tab */}
           {activeTab === 'certifications' && (
-            <div className="space-y-8">
-              {certifications.map((cert, index) => (
-                <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div className="space-y-6">
+              {CERTIFICATIONS_DATA.map((cert, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-gray-800/90 rounded-2xl p-6 sm:p-7 shadow-lg border border-gray-100 dark:border-gray-700/70 hover:shadow-xl transition-all"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-green-600 mb-2">{cert.name}</h3>
-                      <h4 className="text-xl font-semibold mb-2">{cert.issuer}</h4>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center text-gray-600 dark:text-gray-400">
-                        <Calendar size={16} className="mr-2" />
-                        <span>{cert.duration}</span>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {cert.name}
+                      </h3>
+                      <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                        {cert.issuer}
                       </div>
                     </div>
+
+                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                      <Calendar size={13} className="mr-1" />
+                      <span>{cert.period}</span>
+                    </div>
                   </div>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">{cert.description}</p>
-                  
+
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
+                    {cert.description}
+                  </p>
+
                   <div>
-                    <h5 className="font-semibold mb-3">Skills Covered:</h5>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                      Skills & Topics Covered:
+                    </h4>
                     <div className="flex flex-wrap gap-2">
-                      {cert.skills.map((skill, idx) => (
+                      {cert.skills.map((skill, sIdx) => (
                         <span
-                          key={idx}
-                          className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-medium"
+                          key={sIdx}
+                          className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 rounded-lg text-xs font-medium"
                         >
                           {skill}
                         </span>
@@ -236,7 +234,9 @@ const Experience: React.FC = () => {
               ))}
             </div>
           )}
+
         </div>
+
       </div>
     </section>
   );
