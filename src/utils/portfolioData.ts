@@ -290,7 +290,7 @@ export const EXPERIENCES_DATA: ExperienceItem[] = [
 export const EDUCATION_DATA: EducationItem[] = [
   {
     degree: 'B.E. Computer Science and Engineering',
-    institution: 'Bachelor of Engineering',
+    institution: 'PERI Institute of Technology',
     period: '2020 – 2024',
     score: '7.91 / 10',
     scoreLabel: 'CGPA',
@@ -305,7 +305,7 @@ export const EDUCATION_DATA: EducationItem[] = [
   },
   {
     degree: 'Class XII (Higher Secondary)',
-    institution: 'Higher Secondary Education',
+    institution: 'St.Joseph Matriculaltion Higher Secondary School',
     period: '2018 – 2020',
     score: '64.83%',
     scoreLabel: 'Percentage',
@@ -318,7 +318,7 @@ export const EDUCATION_DATA: EducationItem[] = [
   },
   {
     degree: 'Class X (Secondary School)',
-    institution: 'Secondary School Education',
+    institution: 'Sivanandha Saraswathi Matriculaltion Higher Secondary School',
     period: '2016 – 2018',
     score: '92%',
     scoreLabel: 'Percentage',
